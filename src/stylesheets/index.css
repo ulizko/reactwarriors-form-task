@@ -85,3 +85,7 @@ body {
 .step.is-completed:not(:first-child):before {
   background: #f26120;
 }
+
+.custom-file-label.invalid, input.invalid, select.invalid {
+  border-color: #dc3545;
+}

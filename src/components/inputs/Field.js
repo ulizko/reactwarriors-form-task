@@ -11,11 +11,12 @@ const Field = props => {
     palcaholder,
     error,
   } = props
+  const errorClass = error ? ' invalid' : ''
   return (
     <div className="form-group">
       <label htmlFor={id}>{labelText}</label>
       <input
-        className="form-control"
+        className={`form-control${errorClass}`}
         type={type}
         id={id}
         name={name}

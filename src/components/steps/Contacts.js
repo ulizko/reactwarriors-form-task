@@ -10,7 +10,6 @@ export default class Contacts extends Component {
     super(props)
 
     this.state = {
-      city: '',
       errors: {},
     }
 
@@ -19,12 +18,18 @@ export default class Contacts extends Component {
 
   toNextStep = e => {
     e.preventDefault()
-    const { email, phone } = this.props
+    const { email, phone, country, city } = this.props
     const errors = {}
 
-    if (email.length < 5) errors.email = 'Must be 5 characters or more'
+    if (!/[a-z0-9-_.]+@[a-z0-9]+\.[a-z]{2,}/i.test(email))
+      errors.email = 'Invalid email address'
 
-    if (phone.length < 5) errors.phone = 'Must be 5 characters or more'
+    if (!email) errors.email = 'Required'
+
+    if (!/^\d{10}$/.test(phone)) errors.phone = 'invalid mobile'
+
+    if (!country) errors.country = 'Required'
+    if (!city) errors.city = 'Required'
 
     this.setState({ errors }, () => {
       if (Object.keys(this.state.errors).length === 0) {
@@ -34,14 +39,21 @@ export default class Contacts extends Component {
   }
 
   render() {
-    const { email, phone, country, handleChange, decrementStep } = this.props
-    console.log(country)
+    const {
+      email,
+      phone,
+      country,
+      city,
+      handleChange,
+      decrementStep,
+    } = this.props
+
     const countryCities = Object.entries(cities)
       .reduce((acc, city) => {
         return [...acc, { id: city[0], ...city[1] }]
       }, [])
-      .filter(city => city.country === country)
-    console.log(countryCities)
+      .filter(city => city.country === +country)
+
     return (
       <Fragment>
         <Field
@@ -55,7 +67,7 @@ export default class Contacts extends Component {
           error={this.state.errors.email}
         />
         <Field
-          type="phone"
+          type="tel"
           labelText="Phone"
           name="phone"
           id="phone"
@@ -71,6 +83,17 @@ export default class Contacts extends Component {
           labelText="Country"
           value={country}
           handleChange={handleChange}
+          error={this.state.errors.country}
+        />
+        <Select
+          items={countryCities}
+          name="city"
+          id="city"
+          labelText="City"
+          value={city}
+          placeholder="Select city"
+          handleChange={handleChange}
+          error={this.state.errors.city}
         />
         <Buttons
           currentStep={this.stepNumber}

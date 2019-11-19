@@ -21,10 +21,13 @@ class Basic extends Component {
     const errors = {}
 
     if (firstname.length < 5) errors.firstname = 'Must be 5 characters or more'
+    if (!firstname) errors.firstname = 'Required'
 
     if (lastname.length < 5) errors.lastname = 'Must be 5 characters or more'
+    if (!lastname) errors.lastname = 'Required'
 
     if (password.length < 6) errors.password = 'Must be 6 characters or more'
+    if (!password) errors.password = 'Required'
 
     if (repeatPassword !== password)
       errors.repeatPassword = 'Must be equal password'

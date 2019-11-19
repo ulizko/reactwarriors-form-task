@@ -20,7 +20,7 @@ export default class App extends React.Component {
       email: '',
       phone: '',
       country: 1,
-      city: 1,
+      city: '',
       errors: {},
     }
   }
@@ -64,6 +64,7 @@ export default class App extends React.Component {
       email,
       phone,
       country,
+      city,
     } = this.state
     return (
       <div className="form-container card">
@@ -92,6 +93,7 @@ export default class App extends React.Component {
               email={email}
               phone={phone}
               country={country}
+              city={city}
               handleChange={this.handleChange}
               incrementStep={this.incrementStep}
               decrementStep={this.decrementStep}
