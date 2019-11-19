@@ -35,6 +35,11 @@ body {
   align-items: center;
 }
 
+.step.is-completed .step__marker {
+  background: #f26120;
+  border: 4px solid #f26120;
+}
+
 .step.is-active .step__marker {
   background: #19ddfe;
   border: 4px solid #f26120;
@@ -75,11 +80,6 @@ body {
 
 .step.is-active:not(:first-child):before {
   background: #f26120;
-}
-
-.step.is-completed .step__marker {
-  background: #f26120;
-  border: 4px solid #f26120;
 }
 
 .step.is-completed:not(:first-child):before {

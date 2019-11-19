@@ -1,6 +1,7 @@
 import React from 'react'
 import Basic from './steps/Basic'
 import Contacts from './steps/Contacts'
+import Avatar from './steps/Avatar'
 import Step from './Step'
 
 import steps from '../data/steps'
@@ -10,8 +11,8 @@ export default class App extends React.Component {
     super(props)
 
     this.state = {
-      currentStep: 2,
-      completedStep: 1,
+      currentStep: 1,
+      completedStep: '',
       firstname: '',
       lastname: '',
       password: '',
@@ -21,6 +22,7 @@ export default class App extends React.Component {
       phone: '',
       country: 1,
       city: '',
+      avatar: '',
       errors: {},
     }
   }
@@ -32,11 +34,20 @@ export default class App extends React.Component {
     })
   }
 
-  handleErrors = () => {}
+  onChangeAvatar = e => {
+    const reader = new FileReader()
+    reader.onload = e => {
+      this.setState({
+        avatar: e.target.result,
+      })
+    }
+    reader.readAsDataURL(e.target.files[0])
+  }
 
   incrementStep = () => {
     this.setState(prevState => {
       return {
+        completedStep: prevState.currentStep,
         currentStep: prevState.currentStep + 1,
       }
     })
@@ -61,10 +72,12 @@ export default class App extends React.Component {
       repeatPassword,
       gender,
       currentStep,
+      completedStep,
       email,
       phone,
       country,
       city,
+      avatar,
     } = this.state
     return (
       <div className="form-container card">
@@ -72,7 +85,12 @@ export default class App extends React.Component {
           <div className="steps mb-4">
             {steps.map(step => {
               return (
-                <Step key={step.number} currentStep={currentStep} step={step} />
+                <Step
+                  key={step.number}
+                  isCompleted={step.number <= completedStep}
+                  currentStep={currentStep}
+                  step={step}
+                />
               )
             })}
           </div>
@@ -95,6 +113,14 @@ export default class App extends React.Component {
               country={country}
               city={city}
               handleChange={this.handleChange}
+              incrementStep={this.incrementStep}
+              decrementStep={this.decrementStep}
+            />
+          )}
+          {currentStep === 3 && (
+            <Avatar
+              image={avatar}
+              handleChange={this.onChangeAvatar}
               incrementStep={this.incrementStep}
               decrementStep={this.decrementStep}
             />

@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Step = ({ step, currentStep }) => {
+const Step = ({ step, isCompleted, currentStep }) => {
   const isActiveClass = currentStep === step.number ? ' is-active' : ''
-  const isCompletedClass = step.number < currentStep ? ' is-completed' : ''
+  const isCompletedClass = isCompleted ? ' is-completed' : ''
 
   return (
     <div className={`step${isActiveClass}${isCompletedClass}`}>

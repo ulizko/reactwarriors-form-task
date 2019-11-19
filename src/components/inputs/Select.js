@@ -18,11 +18,13 @@ const Select = props => {
       </option>
     )
   })
+
+  const errorClass = error ? ' invalid' : ''
   return (
     <div className="form-group">
       <label htmlFor={id}>{labelText}</label>
       <select
-        className="form-control"
+        className={`form-control${errorClass}`}
         id={id}
         name={name}
         onChange={handleChange}
