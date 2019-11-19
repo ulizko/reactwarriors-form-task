@@ -1,7 +1,16 @@
 import React from 'react'
 
 const Field = props => {
-  const { id, labelText, type, name, value, onChange, palcaholder } = props
+  const {
+    id,
+    labelText,
+    type,
+    name,
+    value,
+    onChange,
+    palcaholder,
+    error,
+  } = props
   return (
     <div className="form-group">
       <label htmlFor={id}>{labelText}</label>
@@ -14,6 +23,7 @@ const Field = props => {
         value={value}
         onChange={onChange}
       />
+      {error && <div className="invalid-feedback">{error}</div>}
     </div>
   )
 }

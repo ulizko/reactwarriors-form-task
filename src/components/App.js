@@ -1,6 +1,6 @@
 import React from 'react'
-import Field from './Field'
-import Radio from './Radio'
+import Basic from './steps/Basic'
+import Contacts from './steps/Contacts'
 import Step from './Step'
 
 import steps from '../data/steps'
@@ -10,20 +10,49 @@ export default class App extends React.Component {
     super(props)
 
     this.state = {
-      currentStep: 1,
+      currentStep: 2,
+      completedStep: 1,
       firstname: '',
       lastname: '',
       password: '',
       repeatPassword: '',
       gender: 'male',
+      email: '',
+      phone: '',
+      country: 1,
+      city: 1,
+      errors: {},
     }
   }
 
   handleChange = e => {
+    console.log(e.target.name, e.target.value)
     this.setState({
       [e.target.name]: e.target.value,
     })
   }
+
+  handleErrors = () => {}
+
+  incrementStep = () => {
+    this.setState(prevState => {
+      return {
+        currentStep: prevState.currentStep + 1,
+      }
+    })
+  }
+  decrementStep = () => {
+    this.setState(prevState => {
+      return {
+        currentStep: prevState.currentStep - 1,
+      }
+    })
+  }
+
+  resetForm = () => {
+    this.setState({ currentStep: 1 })
+  }
+
   render() {
     const {
       firstname,
@@ -32,65 +61,42 @@ export default class App extends React.Component {
       repeatPassword,
       gender,
       currentStep,
+      email,
+      phone,
+      country,
     } = this.state
     return (
       <div className="form-container card">
         <form className="form card-body">
           <div className="steps mb-4">
             {steps.map(step => {
-              return <Step currentStep={currentStep} step={step} />
+              return (
+                <Step key={step.number} currentStep={currentStep} step={step} />
+              )
             })}
           </div>
-          <Field
-            labelText="Firstname"
-            type="text"
-            name="firstname"
-            id="firstname"
-            placeholder="Enter your firstname"
-            value={firstname}
-            onChange={this.handleChange}
-          />
-
-          <Field
-            labelText="Lastname"
-            type="text"
-            name="lastname"
-            id="lastname"
-            placeholder="Enter your firstname"
-            value={lastname}
-            onChange={this.handleChange}
-          />
-
-          <Field
-            labelText="Password"
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={this.handleChange}
-          />
-
-          <Field
-            labelText="Repeat password"
-            type="password"
-            name="repeatPassword"
-            id="repeatPassword"
-            placeholder="Repeat your password"
-            value={repeatPassword}
-            onChange={this.handleChange}
-          />
-
-          <Radio
-            labelText="Gender"
-            name="gender"
-            currentValue={gender}
-            values={[
-              { value: 'male', label: 'Male' },
-              { value: 'female', label: 'Female' },
-            ]}
-            onChange={this.handleChange}
-          />
+          {currentStep === 1 && (
+            <Basic
+              firstname={firstname}
+              lastname={lastname}
+              password={password}
+              repeatPassword={repeatPassword}
+              gender={gender}
+              handleChange={this.handleChange}
+              incrementStep={this.incrementStep}
+              decrementStep={this.decrementStep}
+            />
+          )}
+          {currentStep === 2 && (
+            <Contacts
+              email={email}
+              phone={phone}
+              country={country}
+              handleChange={this.handleChange}
+              incrementStep={this.incrementStep}
+              decrementStep={this.decrementStep}
+            />
+          )}
         </form>
       </div>
     )

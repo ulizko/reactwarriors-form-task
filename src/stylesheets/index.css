@@ -72,3 +72,16 @@ body {
   position: absolute;
   background: #b5b5b5;
 }
+
+.step.is-active:not(:first-child):before {
+  background: #f26120;
+}
+
+.step.is-completed .step__marker {
+  background: #f26120;
+  border: 4px solid #f26120;
+}
+
+.step.is-completed:not(:first-child):before {
+  background: #f26120;
+}

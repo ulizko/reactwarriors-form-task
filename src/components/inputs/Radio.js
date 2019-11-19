@@ -1,13 +1,12 @@
 import React from 'react'
 
-const Radio = props => {
-  const { labelText, name, values, currentValue, onChange } = props
+const Radio = ({ labelText, name, values, currentValue, onChange }) => {
   return (
     <fieldset className="form-group">
       <div>{labelText}</div>
       {values.map(radio => {
         return (
-          <div className="form-check">
+          <div key={radio.value} className="form-check">
             <input
               type="radio"
               name={name}
