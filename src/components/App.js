@@ -2,6 +2,7 @@ import React from 'react'
 import Basic from './steps/Basic'
 import Contacts from './steps/Contacts'
 import Avatar from './steps/Avatar'
+import Finish from './steps/Finish'
 import Step from './Step'
 
 import steps from '../data/steps'
@@ -61,7 +62,20 @@ export default class App extends React.Component {
   }
 
   resetForm = () => {
-    this.setState({ currentStep: 1 })
+    this.setState({
+      currentStep: 1,
+      completedStep: '',
+      firstname: '',
+      lastname: '',
+      password: '',
+      repeatPassword: '',
+      gender: 'male',
+      email: '',
+      phone: '',
+      country: 1,
+      city: '',
+      avatar: '',
+    })
   }
 
   render() {
@@ -123,6 +137,18 @@ export default class App extends React.Component {
               handleChange={this.onChangeAvatar}
               incrementStep={this.incrementStep}
               decrementStep={this.decrementStep}
+            />
+          )}
+          {currentStep === 4 && (
+            <Finish
+              avatar={avatar}
+              email={email}
+              phone={phone}
+              lastname={lastname}
+              firstname={firstname}
+              country={country}
+              city={city}
+              resetForm={this.resetForm}
             />
           )}
         </form>
