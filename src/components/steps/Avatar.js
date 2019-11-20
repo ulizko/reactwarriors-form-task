@@ -28,18 +28,6 @@ export default class Avatar extends Component {
     })
   }
 
-  onChangeAvatar = () => {
-    const { image } = this.props
-
-    if (image) {
-      this.setState({ errors: {} }, () => {
-        if (Object.keys(this.state.errors).length === 0) {
-          this.props.handleChange()
-        }
-      })
-    }
-  }
-
   render() {
     const { image, decrementStep, handleChange } = this.props
     const { errors } = this.state
