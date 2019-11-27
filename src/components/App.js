@@ -3,56 +3,97 @@ import Basic from './steps/Basic'
 import Contacts from './steps/Contacts'
 import Avatar from './steps/Avatar'
 import Finish from './steps/Finish'
-import Step from './Step'
-
-import steps from '../data/steps'
+import Steps from './Steps'
+import Buttons from './Buttons'
 
 export default class App extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
+    this.initialState = {
       currentStep: 1,
-      completedStep: '',
-      firstname: '',
-      lastname: '',
-      password: '',
-      repeatPassword: '',
-      gender: 'male',
-      email: '',
-      phone: '',
-      country: 1,
-      city: '',
-      avatar: '',
+      completedStep: 0,
+      values: {
+        firstname: '',
+        lastname: '',
+        password: '',
+        repeatPassword: '',
+        gender: 'male',
+        email: '',
+        phone: '',
+        country: '',
+        city: '',
+        avatar: '',
+      },
       errors: {},
     }
+
+    this.state = this.initialState
   }
 
-  handleChange = e => {
-    console.log(e.target.name, e.target.value)
-    this.setState({
-      [e.target.name]: e.target.value,
-    })
+  validate = () => {
+    const { values, currentStep } = this.state
+    const errors = {}
+    // validate first step
+    if (currentStep === 1 && values.firstname.length < 5)
+      errors.firstname = 'Must be 5 characters or more'
+    if (currentStep === 1 && !values.firstname) errors.firstname = 'Required'
+
+    if (currentStep === 1 && values.lastname.length < 5)
+      errors.lastname = 'Must be 5 characters or more'
+    if (currentStep === 1 && !values.lastname) errors.lastname = 'Required'
+
+    if (currentStep === 1 && values.password.length < 6)
+      errors.password = 'Must be 6 characters or more'
+    if (currentStep === 1 && !values.password) errors.password = 'Required'
+
+    if (currentStep === 1 && values.repeatPassword !== values.password)
+      errors.repeatPassword = 'Must be equal password'
+
+    if (currentStep === 1 && !values.gender) errors.gender = 'Required'
+    // validate first step
+    if (
+      currentStep === 2 &&
+      !/[a-z0-9-_.]+@[a-z0-9]+\.[a-z]{2,}/i.test(values.email)
+    )
+      errors.email = 'Invalid email address'
+
+    if (currentStep === 2 && !values.email) errors.email = 'Required'
+
+    if (currentStep === 2 && !/^\d{10}$/.test(values.phone))
+      errors.phone = 'invalid mobile'
+
+    if (currentStep === 2 && !values.country) errors.country = 'Required'
+    if (currentStep === 2 && !values.city) errors.city = 'Required'
+    // validate first step
+    if (currentStep === 3 && !values.image) errors.image = 'Required'
+
+    this.setState({ errors })
   }
 
-  onChangeAvatar = e => {
-    const reader = new FileReader()
-    reader.onload = e => {
-      this.setState({
-        avatar: e.target.result,
-      })
-    }
-    reader.readAsDataURL(e.target.files[0])
+  onChange = (e, callback) => {
+    this.setState(
+      {
+        values: {
+          ...this.state.values,
+          [e.target.name]: e.target.value,
+        },
+      },
+      callback
+    )
   }
 
   incrementStep = () => {
-    this.setState(prevState => {
-      return {
-        completedStep: prevState.currentStep,
-        currentStep: prevState.currentStep + 1,
-      }
-    })
+    this.validate()
+    if (Object.keys(this.state.errors).length === 0) {
+      this.setState(prevState => {
+        return {
+          currentStep: prevState.currentStep + 1,
+        }
+      })
+    }
   }
+
   decrementStep = () => {
     this.setState(prevState => {
       return {
@@ -62,95 +103,56 @@ export default class App extends React.Component {
   }
 
   resetForm = () => {
-    this.setState({
-      currentStep: 1,
-      completedStep: '',
-      firstname: '',
-      lastname: '',
-      password: '',
-      repeatPassword: '',
-      gender: 'male',
-      email: '',
-      phone: '',
-      country: 1,
-      city: '',
-      avatar: '',
-    })
+    this.setState(this.initialState)
   }
 
   render() {
-    const {
-      firstname,
-      lastname,
-      password,
-      repeatPassword,
-      gender,
-      currentStep,
-      completedStep,
-      email,
-      phone,
-      country,
-      city,
-      avatar,
-    } = this.state
+    const { values, errors, currentStep, completedStep } = this.state
     return (
       <div className="form-container card">
         <form className="form card-body">
-          <div className="steps mb-4">
-            {steps.map(step => {
-              return (
-                <Step
-                  key={step.number}
-                  isCompleted={step.number <= completedStep}
-                  currentStep={currentStep}
-                  step={step}
-                />
-              )
-            })}
-          </div>
+          <Steps currentStep={currentStep} completedStep={completedStep} />
+
           {currentStep === 1 && (
             <Basic
-              firstname={firstname}
-              lastname={lastname}
-              password={password}
-              repeatPassword={repeatPassword}
-              gender={gender}
-              handleChange={this.handleChange}
+              values={values}
+              errors={errors}
+              onChange={this.onChange}
               incrementStep={this.incrementStep}
               decrementStep={this.decrementStep}
             />
           )}
+
           {currentStep === 2 && (
             <Contacts
-              email={email}
-              phone={phone}
-              country={country}
-              city={city}
-              handleChange={this.handleChange}
+              values={values}
+              errors={errors}
+              onChange={this.onChange}
               incrementStep={this.incrementStep}
               decrementStep={this.decrementStep}
             />
           )}
+
           {currentStep === 3 && (
             <Avatar
-              image={avatar}
-              handleChange={this.onChangeAvatar}
+              values={values}
+              errors={errors}
+              onChange={this.onChange}
               incrementStep={this.incrementStep}
               decrementStep={this.decrementStep}
             />
           )}
+
           {currentStep === 4 && (
-            <Finish
-              avatar={avatar}
-              email={email}
-              phone={phone}
-              lastname={lastname}
-              firstname={firstname}
-              country={country}
-              city={city}
-              resetForm={this.resetForm}
-            />
+            <Finish values={values} resetForm={this.resetForm} />
           )}
+
+          <Buttons
+            currentStep={currentStep}
+            toNextStep={this.incrementStep}
+            toPrevStep={this.decrementStep}
+            resetForm={this.resetForm}
+          />
         </form>
       </div>
     )

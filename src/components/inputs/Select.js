@@ -6,11 +6,12 @@ const Select = props => {
     name,
     labelText,
     id,
-    handleChange,
+    onChange,
     value,
     placeholder,
     error,
   } = props
+
   const optionsForSelect = items.map(item => {
     return (
       <option key={item.id} value={item.id}>
@@ -27,7 +28,7 @@ const Select = props => {
         className={`form-control${errorClass}`}
         id={id}
         name={name}
-        onChange={handleChange}
+        onChange={onChange}
         value={value}
       >
         {placeholder && <option>{placeholder}</option>}

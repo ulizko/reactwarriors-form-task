@@ -13,7 +13,7 @@ export class Finish extends Component {
       country,
       city,
       resetForm,
-    } = this.props
+    } = this.props.values
     const countryName = countries.find(item => item.id === +country).name
     const cityName = cities[city].name
     return (
@@ -36,7 +36,7 @@ export class Finish extends Component {
                 <strong>Mobile:</strong> {phone}
               </p>
               <p>
-                <strong>Location:</strong> {`${countryName}, ${cityName}`}
+                <strong>Location:</strong> {countryName}, {cityName}
               </p>
             </div>
           </div>

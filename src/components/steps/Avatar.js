@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import Buttons from '../inputs/Buttons'
+import classNames from 'classnames'
 
-import defaultAvatar from '../../images/default-avatar.png'
+import DefaultAvatar from '../../images/default-avatar.png'
 
 export default class Avatar extends Component {
   constructor(props) {
@@ -14,30 +14,32 @@ export default class Avatar extends Component {
     this.stepNumber = 3
   }
 
-  toNextStep = e => {
-    e.preventDefault()
-    const { image } = this.props
-    const errors = {}
-
-    if (!image) errors.image = 'Required'
-
-    this.setState({ errors }, () => {
-      if (Object.keys(this.state.errors).length === 0) {
-        this.props.incrementStep()
-      }
-    })
+  onChangeAvatar = e => {
+    const reader = new FileReader()
+    reader.onload = event => {
+      this.props.onChange({
+        target: {
+          name: 'avatar',
+          value: event.target.result,
+        },
+      })
+    }
+    reader.readAsDataURL(e.target.files[0])
   }
 
   render() {
-    const { image, decrementStep, handleChange } = this.props
+    const { avatar } = this.props.values
     const { errors } = this.state
-    const errorClass = errors.image ? ' invalid' : ''
+    const labelClasses = classNames({
+      'custom-file-label': true,
+      invalid: errors.image,
+    })
     return (
       <div>
         <img
           className="mb-4"
           width="100%"
-          src={image || defaultAvatar}
+          src={avatar || DefaultAvatar}
           alt=""
         ></img>
         <div className="mb-4">
@@ -46,12 +48,9 @@ export default class Avatar extends Component {
               type="file"
               className="custom-file-input"
               id="customFile"
-              onChange={handleChange}
+              onChange={this.onChangeAvatar}
             />
-            <label
-              className={`custom-file-label${errorClass}`}
-              htmlFor="customFile"
-            >
+            <label className={labelClasses} htmlFor="customFile">
               Choose avatar
             </label>
           </div>
@@ -59,12 +58,6 @@ export default class Avatar extends Component {
             <div className="invalid-feedback">{errors.image}</div>
           )}
         </div>
-
-        <Buttons
-          currentStep={this.stepNumber}
-          toNextStep={this.toNextStep}
-          toPrevStep={decrementStep}
-        />
       </div>
     )
   }
