@@ -51,7 +51,7 @@ export default class App extends React.Component {
       errors.repeatPassword = 'Must be equal password'
 
     if (currentStep === 1 && !values.gender) errors.gender = 'Required'
-    // validate first step
+    // validate second step
     if (
       currentStep === 2 &&
       !/[a-z0-9-_.]+@[a-z0-9]+\.[a-z]{2,}/i.test(values.email)
@@ -65,7 +65,7 @@ export default class App extends React.Component {
 
     if (currentStep === 2 && !values.country) errors.country = 'Required'
     if (currentStep === 2 && !values.city) errors.city = 'Required'
-    // validate first step
+    // validate third step
     if (currentStep === 3 && !values.avatar) errors.avatar = 'Required'
 
     this.setState({ errors }, callback)
