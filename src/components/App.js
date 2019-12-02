@@ -31,7 +31,7 @@ export default class App extends React.Component {
     this.state = this.initialState
   }
 
-  validate = () => {
+  validate = callback => {
     const { values, currentStep } = this.state
     const errors = {}
     // validate first step
@@ -66,9 +66,9 @@ export default class App extends React.Component {
     if (currentStep === 2 && !values.country) errors.country = 'Required'
     if (currentStep === 2 && !values.city) errors.city = 'Required'
     // validate first step
-    if (currentStep === 3 && !values.image) errors.image = 'Required'
+    if (currentStep === 3 && !values.avatar) errors.avatar = 'Required'
 
-    this.setState({ errors })
+    this.setState({ errors }, callback)
   }
 
   onChange = (e, callback) => {
@@ -78,20 +78,28 @@ export default class App extends React.Component {
           ...this.state.values,
           [e.target.name]: e.target.value,
         },
+        errors: {
+          ...this.state.errors,
+          [e.target.name]: '',
+        },
       },
       callback
     )
   }
 
   incrementStep = () => {
-    this.validate()
-    if (Object.keys(this.state.errors).length === 0) {
-      this.setState(prevState => {
-        return {
-          currentStep: prevState.currentStep + 1,
-        }
-      })
+    const callback = () => {
+      if (Object.keys(this.state.errors).length === 0) {
+        this.setState(prevState => {
+          return {
+            completedStep: prevState.currentStep,
+            currentStep: prevState.currentStep + 1,
+          }
+        })
+      }
     }
+
+    this.validate(callback)
   }
 
   decrementStep = () => {

@@ -9,7 +9,7 @@ const Field = props => {
     name,
     value,
     onChange,
-    palcaholder,
+    placeholder,
     error,
   } = props
   const inputClasses = classNames({ 'form-control': true, invalid: error })
@@ -22,7 +22,7 @@ const Field = props => {
         type={type}
         id={id}
         name={name}
-        palcaholder={palcaholder}
+        placeholder={placeholder}
         value={value}
         onChange={onChange}
       />
