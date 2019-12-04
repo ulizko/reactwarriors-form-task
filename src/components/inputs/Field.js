@@ -1,4 +1,5 @@
 import React from 'react'
+import classNames from 'classnames'
 
 const Field = props => {
   const {
@@ -8,19 +9,20 @@ const Field = props => {
     name,
     value,
     onChange,
-    palcaholder,
+    placeholder,
     error,
   } = props
-  const errorClass = error ? ' invalid' : ''
+  const inputClasses = classNames({ 'form-control': true, invalid: error })
+
   return (
     <div className="form-group">
       <label htmlFor={id}>{labelText}</label>
       <input
-        className={`form-control${errorClass}`}
+        className={inputClasses}
         type={type}
         id={id}
         name={name}
-        palcaholder={palcaholder}
+        placeholder={placeholder}
         value={value}
         onChange={onChange}
       />

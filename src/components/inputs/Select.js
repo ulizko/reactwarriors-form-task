@@ -1,4 +1,5 @@
 import React from 'react'
+import classNames from 'classnames'
 
 const Select = props => {
   const {
@@ -6,11 +7,12 @@ const Select = props => {
     name,
     labelText,
     id,
-    handleChange,
+    onChange,
     value,
     placeholder,
     error,
   } = props
+
   const optionsForSelect = items.map(item => {
     return (
       <option key={item.id} value={item.id}>
@@ -19,15 +21,15 @@ const Select = props => {
     )
   })
 
-  const errorClass = error ? ' invalid' : ''
+  const inputClasses = classNames({ 'form-control': true, invalid: error })
   return (
     <div className="form-group">
       <label htmlFor={id}>{labelText}</label>
       <select
-        className={`form-control${errorClass}`}
+        className={inputClasses}
         id={id}
         name={name}
-        onChange={handleChange}
+        onChange={onChange}
         value={value}
       >
         {placeholder && <option>{placeholder}</option>}

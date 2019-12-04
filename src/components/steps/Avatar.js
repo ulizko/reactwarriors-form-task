@@ -1,71 +1,55 @@
-import React, { Component } from 'react'
-import Buttons from '../inputs/Buttons'
+import React from 'react'
+import classNames from 'classnames'
 
-import defaultAvatar from '../../images/default-avatar.png'
+import DefaultAvatar from '../../images/default-avatar.png'
 
-export default class Avatar extends Component {
-  constructor(props) {
-    super(props)
+const Avatar = ({ values, errors, onChange }) => {
+  const onChangeAvatar = e => {
+    const reader = new FileReader()
 
-    this.state = {
-      errors: {},
+    reader.onload = event => {
+      onChange({
+        target: {
+          name: 'avatar',
+          value: event.target.result,
+        },
+      })
     }
-
-    this.stepNumber = 3
+    reader.readAsDataURL(e.target.files[0])
   }
 
-  toNextStep = e => {
-    e.preventDefault()
-    const { image } = this.props
-    const errors = {}
+  const { avatar } = values
+  const labelClasses = classNames({
+    'custom-file-label': true,
+    invalid: errors.avatar,
+  })
 
-    if (!image) errors.image = 'Required'
-
-    this.setState({ errors }, () => {
-      if (Object.keys(this.state.errors).length === 0) {
-        this.props.incrementStep()
-      }
-    })
-  }
-
-  render() {
-    const { image, decrementStep, handleChange } = this.props
-    const { errors } = this.state
-    const errorClass = errors.image ? ' invalid' : ''
-    return (
-      <div>
-        <img
-          className="mb-4"
-          width="100%"
-          src={image || defaultAvatar}
-          alt=""
-        ></img>
-        <div className="mb-4">
-          <div className="custom-file">
-            <input
-              type="file"
-              className="custom-file-input"
-              id="customFile"
-              onChange={handleChange}
-            />
-            <label
-              className={`custom-file-label${errorClass}`}
-              htmlFor="customFile"
-            >
-              Choose avatar
-            </label>
-          </div>
-          {errors.image && (
-            <div className="invalid-feedback">{errors.image}</div>
-          )}
+  return (
+    <div>
+      <img
+        className="mb-4"
+        width="100%"
+        src={avatar || DefaultAvatar}
+        alt=""
+      ></img>
+      <div className="mb-4">
+        <div className="custom-file">
+          <input
+            type="file"
+            className="custom-file-input"
+            id="customFile"
+            onChange={onChangeAvatar}
+          />
+          <label className={labelClasses} htmlFor="customFile">
+            Choose avatar
+          </label>
         </div>
-
-        <Buttons
-          currentStep={this.stepNumber}
-          toNextStep={this.toNextStep}
-          toPrevStep={decrementStep}
-        />
+        {errors.avatar && (
+          <div className="invalid-feedback">{errors.avatar}</div>
+        )}
       </div>
-    )
-  }
+    </div>
+  )
 }
+
+export default Avatar
